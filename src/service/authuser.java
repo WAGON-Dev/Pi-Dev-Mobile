@@ -24,6 +24,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Map;
 import com.codename1.ui.util.Resources;
+import com.codename1.uikit.cleanmodern.Guide_UI;
 import com.codename1.uikit.cleanmodern.NewsfeedFormClient;
 import com.codename1.uikit.cleanmodern.SignUpForm;
 
@@ -86,11 +87,11 @@ public class authuser {
                     System.out.println(passlog);
                     Dialog.show("error", "Wrong password please retry! ", "cancel", "ok");
                 } else {
-
                     if (user.getRoles().equals("ROLE_CLIENT")) {
                         new NewsfeedFormClient(res).show();
-                        System.out.println("corect");
-                    } else {
+                    } else if (user.getRoles().equals("ROLE_GUIDE")){
+                        new Guide_UI(res).show();
+                    }else{
                         Dialog.show("error", "Votre Espace n'est pas encore pret ", "cancel", "ok");
                     }
 
