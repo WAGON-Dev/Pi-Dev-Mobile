@@ -94,7 +94,6 @@ public class authuser {
                     }else{
                         Dialog.show("error", "Votre Espace n'est pas encore pret ", "cancel", "ok");
                     }
-
                 }
             }
         };

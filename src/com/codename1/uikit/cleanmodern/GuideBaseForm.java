@@ -67,7 +67,7 @@ public class GuideBaseForm extends Form {
         ));
         
         tb.addMaterialCommandToSideMenu("Liste des Voyages", FontImage.MATERIAL_UPDATE, e -> new Guide_UI(res).show());
-        tb.addMaterialCommandToSideMenu("Mon Profile", FontImage.MATERIAL_SETTINGS, e -> new ProfileForm(res).show());
+        tb.addMaterialCommandToSideMenu("Mon Profile", FontImage.MATERIAL_SETTINGS, e ->  new ProfilFormGuide(res).show());
         tb.addMaterialCommandToSideMenu("Déconnexion", FontImage.MATERIAL_EXIT_TO_APP, e -> new SignInForm(res).show());
     }
     

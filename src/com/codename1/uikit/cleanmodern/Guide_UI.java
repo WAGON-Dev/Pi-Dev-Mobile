@@ -8,6 +8,11 @@ package com.codename1.uikit.cleanmodern;
 import com.codename1.components.ScaleImageLabel;
 import com.codename1.components.SpanLabel;
 import com.codename1.components.ToastBar;
+import com.codename1.io.CharArrayReader;
+import com.codename1.io.ConnectionRequest;
+import com.codename1.io.JSONParser;
+import com.codename1.io.NetworkEvent;
+import com.codename1.io.NetworkManager;
 import com.codename1.ui.Button;
 import com.codename1.ui.ButtonGroup;
 import com.codename1.ui.Component;
@@ -18,6 +23,7 @@ import static com.codename1.ui.Component.RIGHT;
 import com.codename1.ui.Container;
 import com.codename1.ui.Display;
 import com.codename1.ui.FontImage;
+import com.codename1.ui.Form;
 import com.codename1.ui.Graphics;
 import com.codename1.ui.Image;
 import com.codename1.ui.Label;
@@ -25,6 +31,8 @@ import com.codename1.ui.RadioButton;
 import com.codename1.ui.Tabs;
 import com.codename1.ui.TextArea;
 import com.codename1.ui.Toolbar;
+import com.codename1.ui.events.ActionEvent;
+import com.codename1.ui.events.ActionListener;
 import com.codename1.ui.layouts.BorderLayout;
 import com.codename1.ui.layouts.BoxLayout;
 import com.codename1.ui.layouts.FlowLayout;
@@ -32,13 +40,19 @@ import com.codename1.ui.layouts.GridLayout;
 import com.codename1.ui.layouts.LayeredLayout;
 import com.codename1.ui.plaf.Style;
 import com.codename1.ui.util.Resources;
+import entity.Voyagepersonalise;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  *
  * @author Ghassen
  */
 public class Guide_UI extends GuideBaseForm{
-    
+   
     public Guide_UI(Resources res) {
         super("Newsfeed", BoxLayout.y());
         Toolbar tb = new Toolbar(true);
@@ -93,47 +107,24 @@ public class Guide_UI extends GuideBaseForm{
         Component.setSameSize(radioContainer, spacer2);
         add(LayeredLayout.encloseIn(swipe, radioContainer));
         
-        ButtonGroup barGroup = new ButtonGroup();
-        RadioButton all = RadioButton.createToggle("All", barGroup);
-        all.setUIID("SelectBar");
-        RadioButton featured = RadioButton.createToggle("Featured", barGroup);
-        featured.setUIID("SelectBar");
-        RadioButton popular = RadioButton.createToggle("Popular", barGroup);
-        popular.setUIID("SelectBar");
-        RadioButton myFavorite = RadioButton.createToggle("My Favorites", barGroup);
-        myFavorite.setUIID("SelectBar");
-        Label arrow = new Label(res.getImage("news-tab-down-arrow.png"), "Container");
-        
-        add(LayeredLayout.encloseIn(
-                GridLayout.encloseIn(4, all, featured, popular, myFavorite),
-                FlowLayout.encloseBottom(arrow)
-        ));
-        
-        all.setSelected(true);
-        arrow.setVisible(false);
-        addShowListener(e -> {
-            arrow.setVisible(true);
-            updateArrowPosition(all, arrow);
+        ConnectionRequest con = new ConnectionRequest();
+        con.setUrl("http://localhost/apijsonpi/web/app_dev.php/api/vpall");
+        //con.setUrl("http://pidev.justsmart.tn/api/tasks/all"); //Pour la liste des étudiants 
+        con.addResponseListener(new ActionListener<NetworkEvent>() {
+           
+            List<Voyagepersonalise> Voyagepersonalises = new ArrayList<>();
+
+            @Override
+            public void actionPerformed(NetworkEvent evt) {
+                Voyagepersonalises = getList(new String(con.getResponseData()));
+                for (Iterator it = Voyagepersonalises.iterator(); it.hasNext();) {
+                    Voyagepersonalise r = (Voyagepersonalise) it.next();
+                    addButton(res.getImage("news-item-3.jpg"),r,res);
+                }
+
+            } 
         });
-        bindButtonSelection(all, arrow);
-        bindButtonSelection(featured, arrow);
-        bindButtonSelection(popular, arrow);
-        bindButtonSelection(myFavorite, arrow);
-        
-        // special case for rotation
-        addOrientationListener(e -> {
-            updateArrowPosition(barGroup.getRadioButton(barGroup.getSelectedIndex()), arrow);
-        });
-        
-        addButton(res.getImage("news-item-1.jpg"), "first", false, 26, 32);
-        addButton(res.getImage("news-item-4.jpg"), "second", false, 11, 9);
-    }
-    
-    private void updateArrowPosition(Button b, Label arrow) {
-        arrow.getUnselectedStyle().setMargin(LEFT, b.getX() + b.getWidth() / 2 - arrow.getWidth() / 2);
-        arrow.getParent().repaint();
-        
-        
+        NetworkManager.getInstance().addToQueue(con);
     }
     
     private void addTab(Tabs swipe, Image img, Label spacer, String likesStr, String commentsStr, String text) {
@@ -174,37 +165,62 @@ public class Guide_UI extends GuideBaseForm{
         swipe.addTab("", page1);
     }
     
-   private void addButton(Image img, String title, boolean liked, int likeCount, int commentCount) {
+   private void addButton(Image img, Voyagepersonalise v,Resources res) {
        int height = Display.getInstance().convertToPixels(11.5f);
        int width = Display.getInstance().convertToPixels(14f);
        Button image = new Button(img.fill(width, height));
        image.setUIID("Label");
        Container cnt = BorderLayout.west(image);
-       cnt.setLeadComponent(image);
-       TextArea ta = new TextArea(title);
+       TextArea ta = new TextArea(v.getNom());
        ta.setUIID("NewsTopLine");
        ta.setEditable(false);
-       
        Button sb = new Button("Postuler");
        sb.setTextPosition(RIGHT);
-       Label likes = new Label(likeCount + " Likes  ", "NewsBottomLine");
+       Label likes = new Label(v.getVille_depart()+ " Likes  ", "NewsBottomLine");
        likes.setTextPosition(RIGHT);
-       Label comments = new Label(commentCount + " Comments", "NewsBottomLine");
+       Label comments = new Label(v.getVille_arrive()+ " Comments", "NewsBottomLine");
        cnt.add(BorderLayout.CENTER, 
                BoxLayout.encloseY(
                        ta,
                        sb
                ));
        add(cnt);
-       image.addActionListener(e -> ToastBar.showMessage(title, FontImage.MATERIAL_INFO));
+       image.addActionListener(e -> ToastBar.showMessage("Nombre des participants: "+v.getNbr_participant(), FontImage.MATERIAL_INFO));
+       sb.addActionListener(new ActionListener() {
+           @Override
+           public void actionPerformed(ActionEvent evt) {
+           }
+       });
    }
     
-    private void bindButtonSelection(Button b, Label arrow) {
-        b.addActionListener(e -> {
-            if(b.isSelected()) {
-                updateArrowPosition(b, arrow);
+    public ArrayList<Voyagepersonalise> getList(String json) {
+        ArrayList<Voyagepersonalise> listEtudiants = new ArrayList<>();
+        try {
+            int i = 0;
+            JSONParser j = new JSONParser();
+
+            Map<String, Object> etudiants = j.parseJSON(new CharArrayReader(json.toCharArray()));
+            Form f = new Form();
+            System.out.println();
+            List<Map<String, Object>> list = (List<Map<String, Object>>) etudiants.get("root");
+
+            for (Map<String, Object> obj : list) {
+                i++;
+                Voyagepersonalise e = new Voyagepersonalise();//id, json, status);
+                
+                e.setId_vp((int) Float.parseFloat(obj.get("idVp").toString()));
+                e.setClient_vp_fk((int) Float.parseFloat(obj.get("clientVpFk").toString()));
+                e.setNbr_participant((int) Float.parseFloat(obj.get("nbrParticipant").toString()));    
+                e.setNom(obj.get("nom").toString());      
+                e.setVille_arrive(obj.get("villeArrive").toString());    
+                e.setVille_depart(obj.get("villeDepart").toString());
+                listEtudiants.add(e);
+
             }
-        });
+
+        } catch (IOException ex) {
+        }
+        return listEtudiants;
+
     }
-    
 }
