@@ -58,7 +58,7 @@ public class Guide_UI extends GuideBaseForm{
         Toolbar tb = new Toolbar(true);
         setToolbar(tb);
         getTitleArea().setUIID("Container");
-        setTitle("Espace Guide");
+        setTitle("Liste des Voyages personalisés");
         getContentPane().setScrollVisible(false);
         
         super.addSideMenu(res);
@@ -67,7 +67,7 @@ public class Guide_UI extends GuideBaseForm{
         Tabs swipe = new Tabs();
 
         Label spacer2 = new Label();
-        addTab(swipe, res.getImage("dog.jpg"), spacer2, "100 Likes  ", "66 Comments", "Dogs are cute: story at 11");
+        addTab(swipe, res.getImage("vp.jpg"), spacer2, "100 Likes  ", "66 Comments", "Dogs are cute: story at 11");
                 
         swipe.setUIID("Container");
         swipe.getContentPane().setUIID("Container");
@@ -119,7 +119,7 @@ public class Guide_UI extends GuideBaseForm{
                 Voyagepersonalises = getList(new String(con.getResponseData()));
                 for (Iterator it = Voyagepersonalises.iterator(); it.hasNext();) {
                     Voyagepersonalise r = (Voyagepersonalise) it.next();
-                    addButton(res.getImage("news-item-3.jpg"),r,res);
+                    addButton(res.getImage("vppic.jpg"),r,res);
                 }
 
             } 
@@ -155,9 +155,6 @@ public class Guide_UI extends GuideBaseForm{
                 overlay,
                 BorderLayout.south(
                     BoxLayout.encloseY(
-                            new SpanLabel(text, "LargeWhiteText"),
-                            FlowLayout.encloseIn(likes, comments),
-                            spacer
                         )
                 )
             );
@@ -176,12 +173,13 @@ public class Guide_UI extends GuideBaseForm{
        ta.setEditable(false);
        Button sb = new Button("Postuler");
        sb.setTextPosition(RIGHT);
-       Label likes = new Label(v.getVille_depart()+ " Likes  ", "NewsBottomLine");
+       Label likes = new Label("de "+v.getVille_depart(), "NewsBottomLine");
        likes.setTextPosition(RIGHT);
-       Label comments = new Label(v.getVille_arrive()+ " Comments", "NewsBottomLine");
+       Label comments = new Label("à "+v.getVille_arrive(), "NewsBottomLine");
        cnt.add(BorderLayout.CENTER, 
                BoxLayout.encloseY(
                        ta,
+                       BoxLayout.encloseX(likes, comments),
                        sb
                ));
        add(cnt);

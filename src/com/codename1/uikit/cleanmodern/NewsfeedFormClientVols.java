@@ -65,7 +65,7 @@ public class NewsfeedFormClientVols extends BaseFormClient {
         Tabs swipe = new Tabs();
 
         Label spacer1 = new Label();
-        addTab(swipe, res.getImage("news-item.jpg"), spacer1, "15 Likes  ", "85 Comments", "Integer ut placerat purued non dignissim neque. ");
+        addTab(swipe, res.getImage("vol.jpg"), spacer1, "15 Likes  ", "85 Comments", "Integer ut placerat purued non dignissim neque. ");
                 
         swipe.setUIID("Container");
         swipe.getContentPane().setUIID("Container");
@@ -117,7 +117,7 @@ public class NewsfeedFormClientVols extends BaseFormClient {
                 vols = getList(new String(con.getResponseData()));
                 for (Iterator it = vols.iterator(); it.hasNext();) {
                     Vol r = (Vol) it.next();
-                    addButton(res.getImage("news-item-3.jpg"),r,res);
+                    addButton(res.getImage(r.getNom_Compagnie()+".jpg"),r,res);
                 }
 
             } 
@@ -186,13 +186,14 @@ public class NewsfeedFormClientVols extends BaseFormClient {
        
        Button sb = new Button("Réserver");
        sb.setTextPosition(RIGHT);
-       Label likes = new Label(v.getDepart() + " Likes  ", "NewsBottomLine");
+       Label likes = new Label("de "+v.getDepart(), "NewsBottomLine");
        likes.setTextPosition(RIGHT);
-       Label comments = new Label(v.getArrivee() + " Comments", "NewsBottomLine");
+       Label comments = new Label("à "+v.getArrivee(), "NewsBottomLine");
        cnt.add(BorderLayout.CENTER, 
                BoxLayout.encloseY(
                        ta,
                        tnc,
+                       BoxLayout.encloseX(likes, comments),
                        sb
                ));
        add(cnt);
