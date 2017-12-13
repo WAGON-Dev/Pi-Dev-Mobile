@@ -26,6 +26,7 @@ import java.util.Map;
 import com.codename1.ui.util.Resources;
 import com.codename1.uikit.cleanmodern.NewsfeedFormClient;
 import com.codename1.uikit.cleanmodern.SignUpForm;
+import service.MD5;
 
 /**
  *
@@ -35,13 +36,12 @@ public class authuser {
 
     public static Users user = new Users();
     int temp;
-
+    
     public void login(Resources res) {
         // TextField userlogin = (TextField) SignInForm.builder.findByName("Username", SignInForm.ctn);
         //TextField passlogin = (TextField) SignInForm.builder.findByName("Password", SignInForm.ctn);
         String userlog = SignInForm.username.getText();
         String passlog = SignInForm.password.getText();
-
         ConnectionRequest connectionRequest;
         connectionRequest = new ConnectionRequest() {
             @Override
@@ -81,7 +81,7 @@ public class authuser {
                 System.out.println(user);
                 if (passlog.equals("")) {
                     Dialog.show("error", "Please put your password ! ", "cancel", "ok");
-                } else if (!(user.getPassword().equals(passlog))) {
+                } else if (!(user.getPassword().equals(MD5.hash(passlog)))) {
                     System.out.println(user.getPassword());
                     System.out.println(passlog);
                     Dialog.show("error", "Wrong password please retry! ", "cancel", "ok");
@@ -164,7 +164,7 @@ public class authuser {
                 }
             }
         };
-        connectionRequest.setUrl("http://localhost/apijsonpi/web/app_dev.php/api/newuser?username=" + userlog + "&email=" + email + "&password=" + pass + "&role=" + rol + "&numtel=" + numtel + "&adresse=" + adresse);
+        connectionRequest.setUrl("http://localhost/apijsonpi/web/app_dev.php/api/newuser?username=" + userlog + "&email=" + email + "&password=" + MD5.hash(pass) + "&role=" + rol + "&numtel=" + numtel + "&adresse=" + adresse);
         NetworkManager.getInstance().addToQueue(connectionRequest);
 
     }

@@ -31,6 +31,7 @@ import com.codename1.ui.layouts.BorderLayout;
 import com.codename1.ui.layouts.BoxLayout;
 import com.codename1.ui.layouts.FlowLayout;
 import com.codename1.ui.util.Resources;
+import service.MD5;
 import service.authuser;
 
 /**
@@ -44,7 +45,6 @@ public class SignInForm extends BaseForm {
     public static Resources res;
     public SignInForm(Resources res) {
         super(new BorderLayout());
-        
         if(!Display.getInstance().isTablet()) {
             BorderLayout bl = (BorderLayout)getLayout();
             bl.defineLandscapeSwap(BorderLayout.NORTH, BorderLayout.EAST);
@@ -55,10 +55,10 @@ public class SignInForm extends BaseForm {
         
         add(BorderLayout.NORTH, new Label(res.getImage("Logo.png"), "LogoLabel"));
         
-        username = new TextField("", "Username", 20, TextField.ANY);
+        username = new TextField("", "Email", 20, TextField.ANY);
         password = new TextField("", "Password", 20, TextField.PASSWORD);
-        username.setSingleLineTextArea(false);
-        password.setSingleLineTextArea(false);
+        username.setSingleLineTextArea(true);
+        password.setSingleLineTextArea(true);
         Button signIn = new Button("Sign In");
         Button signUp = new Button("Sign Up");
         signUp.addActionListener(e -> new SignUpForm(res).show());

@@ -82,6 +82,9 @@ public class ProfilClient {
             }
         };
         //System.out.println(userlog);
+        if(authuser.user.getPassword()!=pass){
+            pass=MD5.hash(authuser.user.getPassword());
+        }
         connectionRequest.setUrl("http://localhost/apijsonpi/web/app_dev.php/api/edituser/"+authuser.user.getId_user()+"?username="+userlog+"&email="+mail+"&password="+pass+"&nom="+nom+"&prenom="+prenom);
         NetworkManager.getInstance().addToQueue(connectionRequest);
     }
