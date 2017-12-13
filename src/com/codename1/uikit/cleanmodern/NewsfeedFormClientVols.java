@@ -6,8 +6,12 @@
 package com.codename1.uikit.cleanmodern;
 
 import com.codename1.components.ScaleImageLabel;
-import com.codename1.components.SpanLabel;
 import com.codename1.components.ToastBar;
+import com.codename1.io.CharArrayReader;
+import com.codename1.io.ConnectionRequest;
+import com.codename1.io.JSONParser;
+import com.codename1.io.NetworkEvent;
+import com.codename1.io.NetworkManager;
 import com.codename1.ui.Button;
 import com.codename1.ui.ButtonGroup;
 import com.codename1.ui.Component;
@@ -18,6 +22,7 @@ import static com.codename1.ui.Component.RIGHT;
 import com.codename1.ui.Container;
 import com.codename1.ui.Display;
 import com.codename1.ui.FontImage;
+import com.codename1.ui.Form;
 import com.codename1.ui.Graphics;
 import com.codename1.ui.Image;
 import com.codename1.ui.Label;
@@ -25,25 +30,33 @@ import com.codename1.ui.RadioButton;
 import com.codename1.ui.Tabs;
 import com.codename1.ui.TextArea;
 import com.codename1.ui.Toolbar;
+import com.codename1.ui.events.ActionEvent;
+import com.codename1.ui.events.ActionListener;
 import com.codename1.ui.layouts.BorderLayout;
 import com.codename1.ui.layouts.BoxLayout;
 import com.codename1.ui.layouts.FlowLayout;
-import com.codename1.ui.layouts.GridLayout;
 import com.codename1.ui.layouts.LayeredLayout;
 import com.codename1.ui.plaf.Style;
 import com.codename1.ui.util.Resources;
+import entity.Vol;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  *
  * @author Ghassen
  */
-public class NewsfeedFormClient extends BaseFormClient{
-    public NewsfeedFormClient(Resources res) {
+public class NewsfeedFormClientVols extends BaseFormClient {
+
+    public NewsfeedFormClientVols(Resources res) {
         super("Newsfeed", BoxLayout.y());
         Toolbar tb = new Toolbar(true);
         setToolbar(tb);
         getTitleArea().setUIID("Container");
-        setTitle("Newsfeed");
+        setTitle("Liste des Vols");
         getContentPane().setScrollVisible(false);
         
         super.addSideMenu(res);
@@ -52,9 +65,7 @@ public class NewsfeedFormClient extends BaseFormClient{
         Tabs swipe = new Tabs();
 
         Label spacer1 = new Label();
-        Label spacer2 = new Label();
-        addTab(swipe, res.getImage("news-item.jpg"), spacer1, "15 Likes  ", "85 Comments", "Integer ut placerat purued non dignissim neque. ");
-        addTab(swipe, res.getImage("dog.jpg"), spacer2, "100 Likes  ", "66 Comments", "Dogs are cute: story at 11");
+        addTab(swipe, res.getImage("vol.jpg"), spacer1, "15 Likes  ", "85 Comments", "Integer ut placerat purued non dignissim neque. ");
                 
         swipe.setUIID("Container");
         swipe.getContentPane().setUIID("Container");
@@ -91,45 +102,27 @@ public class NewsfeedFormClient extends BaseFormClient{
             }
         });
         
-        Component.setSameSize(radioContainer, spacer1, spacer2);
+        Component.setSameSize(radioContainer, spacer1);
         add(LayeredLayout.encloseIn(swipe, radioContainer));
         
-        ButtonGroup barGroup = new ButtonGroup();
-        RadioButton all = RadioButton.createToggle("All", barGroup);
-        all.setUIID("SelectBar");
-        RadioButton featured = RadioButton.createToggle("Featured", barGroup);
-        featured.setUIID("SelectBar");
-        RadioButton popular = RadioButton.createToggle("Popular", barGroup);
-        popular.setUIID("SelectBar");
-        RadioButton myFavorite = RadioButton.createToggle("My Favorites", barGroup);
-        myFavorite.setUIID("SelectBar");
-        Label arrow = new Label(res.getImage("news-tab-down-arrow.png"), "Container");
-        
-        add(LayeredLayout.encloseIn(
-                GridLayout.encloseIn(4, all, featured, popular, myFavorite),
-                FlowLayout.encloseBottom(arrow)
-        ));
-        
-        all.setSelected(true);
-        arrow.setVisible(false);
-        addShowListener(e -> {
-            arrow.setVisible(true);
-            updateArrowPosition(all, arrow);
+        ConnectionRequest con = new ConnectionRequest();
+        con.setUrl("http://localhost/apijsonpi/web/app_dev.php/api/vols");
+        //con.setUrl("http://pidev.justsmart.tn/api/tasks/all"); //Pour la liste des étudiants 
+        con.addResponseListener(new ActionListener<NetworkEvent>() {
+           
+            List<Vol> vols = new ArrayList<>();
+
+            @Override
+            public void actionPerformed(NetworkEvent evt) {
+                vols = getList(new String(con.getResponseData()));
+                for (Iterator it = vols.iterator(); it.hasNext();) {
+                    Vol r = (Vol) it.next();
+                    addButton(res.getImage(r.getNom_Compagnie()+".jpg"),r,res);
+                }
+
+            } 
         });
-        bindButtonSelection(all, arrow);
-        bindButtonSelection(featured, arrow);
-        bindButtonSelection(popular, arrow);
-        bindButtonSelection(myFavorite, arrow);
-        
-        // special case for rotation
-        addOrientationListener(e -> {
-            updateArrowPosition(barGroup.getRadioButton(barGroup.getSelectedIndex()), arrow);
-        });
-        
-        addButton(res.getImage("news-item-1.jpg"), "Morbi per tincidunt tellus sit of amet eros laoreet.", false, 26, 32);
-        addButton(res.getImage("news-item-2.jpg"), "Fusce ornare cursus masspretium tortor integer placera.", true, 15, 21);
-        addButton(res.getImage("news-item-3.jpg"), "Maecenas eu risus blanscelerisque massa non amcorpe.", false, 36, 15);
-        addButton(res.getImage("news-item-4.jpg"), "Pellentesque non lorem diam. Proin at ex sollicia.", false, 11, 9);
+        NetworkManager.getInstance().addToQueue(con);
     }
     
     private void updateArrowPosition(Button b, Label arrow) {
@@ -167,8 +160,6 @@ public class NewsfeedFormClient extends BaseFormClient{
                 overlay,
                 BorderLayout.south(
                     BoxLayout.encloseY(
-                            new SpanLabel(text, "LargeWhiteText"),
-                            FlowLayout.encloseIn(likes, comments),
                             spacer
                         )
                 )
@@ -177,38 +168,41 @@ public class NewsfeedFormClient extends BaseFormClient{
         swipe.addTab("", page1);
     }
     
-   private void addButton(Image img, String title, boolean liked, int likeCount, int commentCount) {
+   private void addButton(Image img, Vol v,Resources res) {
        int height = Display.getInstance().convertToPixels(11.5f);
        int width = Display.getInstance().convertToPixels(14f);
        Button image = new Button(img.fill(width, height));
        image.setUIID("Label");
        Container cnt = BorderLayout.west(image);
-       cnt.setLeadComponent(image);
-       TextArea ta = new TextArea(title);
+       TextArea ta = new TextArea(v.getNom_Vol());
+       TextArea tnc = new TextArea("Compagnie: "+v.getNom_Compagnie());
+       TextArea tp = new TextArea(v.getPrix_vol().toString());
        ta.setUIID("NewsTopLine");
        ta.setEditable(false);
-
-       Label likes = new Label(likeCount + " Likes  ", "NewsBottomLine");
+       tnc.setUIID("NewsTopLine");
+       tnc.setEditable(false);
+       tp.setUIID("NewsTopLine");
+       tp.setEditable(false);
+       
+       Button sb = new Button("Réserver");
+       sb.setTextPosition(RIGHT);
+       Label likes = new Label("de "+v.getDepart(), "NewsBottomLine");
        likes.setTextPosition(RIGHT);
-       if(!liked) {
-           FontImage.setMaterialIcon(likes, FontImage.MATERIAL_FAVORITE);
-       } else {
-           Style s = new Style(likes.getUnselectedStyle());
-           s.setFgColor(0xff2d55);
-           FontImage heartImage = FontImage.createMaterial(FontImage.MATERIAL_FAVORITE, s);
-           likes.setIcon(heartImage);
-       }
-       Label comments = new Label(commentCount + " Comments", "NewsBottomLine");
-       FontImage.setMaterialIcon(likes, FontImage.MATERIAL_CHAT);
-       
-       
+       Label comments = new Label("à "+v.getArrivee(), "NewsBottomLine");
        cnt.add(BorderLayout.CENTER, 
                BoxLayout.encloseY(
                        ta,
-                       BoxLayout.encloseX(likes, comments)
+                       tnc,
+                       BoxLayout.encloseX(likes, comments),
+                       sb
                ));
        add(cnt);
-       image.addActionListener(e -> ToastBar.showMessage(title, FontImage.MATERIAL_INFO));
+       image.addActionListener(e -> ToastBar.showMessage("de "+v.getDepart()+" à "+v.getArrivee()+"\nPrix:"+v.getPrix_vol()+"DT", FontImage.MATERIAL_INFO));
+       sb.addActionListener(new ActionListener() {
+           @Override
+           public void actionPerformed(ActionEvent evt) {
+           }
+       });
    }
     
     private void bindButtonSelection(Button b, Label arrow) {
@@ -217,5 +211,37 @@ public class NewsfeedFormClient extends BaseFormClient{
                 updateArrowPosition(b, arrow);
             }
         });
+    }
+    public ArrayList<Vol> getList(String json) {
+        ArrayList<Vol> listEtudiants = new ArrayList<>();
+        try {
+            int i = 0;
+            JSONParser j = new JSONParser();
+
+            Map<String, Object> etudiants = j.parseJSON(new CharArrayReader(json.toCharArray()));
+            Form f = new Form();
+            System.out.println();
+            List<Map<String, Object>> list = (List<Map<String, Object>>) etudiants.get("root");
+
+            for (Map<String, Object> obj : list) {
+                i++;
+                Vol e = new Vol();//id, json, status);
+                
+                e.setClient_vol_fk((int) Float.parseFloat(obj.get("clientVolFk").toString()));
+                e.setNumTicket((int) Float.parseFloat(obj.get("numticket").toString()));
+                e.setPrix_vol((double) Float.parseFloat(obj.get("prixVol").toString()));    
+                e.setNom_Vol(obj.get("nomVol").toString());    
+                e.setNom_Compagnie(obj.get("nomCompagnie").toString());    
+                e.setArrivee(obj.get("arrivee").toString());    
+                e.setDepart(obj.get("depart").toString());
+                System.out.println(e.toString());
+                listEtudiants.add(e);
+
+            }
+
+        } catch (IOException ex) {
+        }
+        return listEtudiants;
+
     }
 }
