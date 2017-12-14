@@ -62,7 +62,6 @@ public class NewsfeedFormClientVols extends BaseFormClient {
         getContentPane().setScrollVisible(false);
         
         super.addSideMenu(res);
-        tb.addSearchCommand(e -> {});
         
         Tabs swipe = new Tabs();
 
