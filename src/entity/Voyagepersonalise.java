@@ -19,6 +19,7 @@ public class Voyagepersonalise {
     private Date date_arrive;
     private int nbr_participant;
     private int client_vp_fk;
+    private int guide_fk;
 
     public Voyagepersonalise() {
     }
@@ -96,6 +97,14 @@ public class Voyagepersonalise {
 
     public void setClient_vp_fk(int client_vp_fk) {
         this.client_vp_fk = client_vp_fk;
+    }
+
+    public int getGuide_fk() {
+        return guide_fk;
+    }
+
+    public void setGuide_fk(int guide_fk) {
+        this.guide_fk = guide_fk;
     }
     
     
