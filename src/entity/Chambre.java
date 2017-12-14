@@ -18,7 +18,7 @@ public class Chambre {
     double prix;
     Date datedebut ;
     Date datefin ;
-    Client Client_fk;
+    int Client_fk;
     int Hotel_fk;
 
     public Date getDatedebut() {
@@ -40,7 +40,7 @@ public class Chambre {
     public Chambre(){
     }
     
-    public Chambre(int id, String Type, double prix, Client Client_fk, int Hotel_fk) {
+    public Chambre(int id, String Type, double prix, int Client_fk, int Hotel_fk) {
         this.id = id;
         this.Type = Type;
         this.prix = prix;
@@ -48,7 +48,7 @@ public class Chambre {
         this.Hotel_fk = Hotel_fk;
     }
     
-    public Chambre(String Type, double prix, Client Client_fk, int Hotel_fk) {
+    public Chambre(String Type, double prix, int Client_fk, int Hotel_fk) {
         this.Type = Type;
         this.prix = prix;
         this.Client_fk = Client_fk;
@@ -67,7 +67,7 @@ public class Chambre {
         return prix;
     }
 
-    public Client getClient_fk() {
+    public int getClient_fk() {
         return Client_fk;
     }
 
@@ -87,7 +87,7 @@ public class Chambre {
         this.prix = prix;
     }
 
-    public void setClient_fk(Client Client_fk) {
+    public void setClient_fk(int Client_fk) {
         this.Client_fk = Client_fk;
     }
 

@@ -92,7 +92,7 @@ public class authuser {
                     Dialog.show("error", "Wrong password please retry! ", "cancel", "ok");
                 } else {
                     if (user.getRoles().equals("ROLE_CLIENT")) {
-                        //new AfficheForClient(res,user).show();
+                        new NewsfeedFormClient(res).show();
                     } else if (user.getRoles().equals("ROLE_GUIDE")){
                         new Guide_UI(res).show();
                     }else if (user.getRoles().equals("ROLE_AGENCE_VOITURE")) {
