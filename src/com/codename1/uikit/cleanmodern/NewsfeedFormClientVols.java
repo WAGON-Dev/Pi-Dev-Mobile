@@ -35,6 +35,7 @@ import com.codename1.ui.events.ActionListener;
 import com.codename1.ui.layouts.BorderLayout;
 import com.codename1.ui.layouts.BoxLayout;
 import com.codename1.ui.layouts.FlowLayout;
+import com.codename1.ui.layouts.GridLayout;
 import com.codename1.ui.layouts.LayeredLayout;
 import com.codename1.ui.plaf.Style;
 import com.codename1.ui.util.Resources;
@@ -44,6 +45,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import service.authuser;
 
 /**
  *
@@ -60,7 +62,6 @@ public class NewsfeedFormClientVols extends BaseFormClient {
         getContentPane().setScrollVisible(false);
         
         super.addSideMenu(res);
-        tb.addSearchCommand(e -> {});
         
         Tabs swipe = new Tabs();
 
@@ -105,9 +106,30 @@ public class NewsfeedFormClientVols extends BaseFormClient {
         Component.setSameSize(radioContainer, spacer1);
         add(LayeredLayout.encloseIn(swipe, radioContainer));
         
+        ButtonGroup barGroup = new ButtonGroup();
+        RadioButton all = RadioButton.createToggle("Liste des Vols", barGroup);
+        all.setUIID("SelectBar");
+        Label arrow = new Label(res.getImage("news-tab-down-arrow.png"), "Container");
+        
+        add(LayeredLayout.encloseIn(
+                GridLayout.encloseIn(1, all),
+                FlowLayout.encloseBottom(arrow)
+        ));
+        
+        all.setSelected(true);
+        arrow.setVisible(false);
+        addShowListener(e -> {
+            arrow.setVisible(true);
+            updateArrowPosition(all, arrow);
+        });
+        bindButtonSelection(all, arrow);
+        
+        // special case for rotation
+        addOrientationListener(e -> {
+            updateArrowPosition(barGroup.getRadioButton(barGroup.getSelectedIndex()), arrow);
+        });
         ConnectionRequest con = new ConnectionRequest();
         con.setUrl("http://localhost/apijsonpi/web/app_dev.php/api/vols");
-        //con.setUrl("http://pidev.justsmart.tn/api/tasks/all"); //Pour la liste des étudiants 
         con.addResponseListener(new ActionListener<NetworkEvent>() {
            
             List<Vol> vols = new ArrayList<>();
@@ -117,7 +139,10 @@ public class NewsfeedFormClientVols extends BaseFormClient {
                 vols = getList(new String(con.getResponseData()));
                 for (Iterator it = vols.iterator(); it.hasNext();) {
                     Vol r = (Vol) it.next();
-                    addButton(res.getImage(r.getNom_Compagnie()+".jpg"),r,res);
+                    if(r.getClient_vol_fk()>0 ) {
+                    } else {
+                        addButton(res.getImage(r.getNom_Compagnie()+".jpg"),r,res);
+                    }
                 }
 
             } 
@@ -192,7 +217,6 @@ public class NewsfeedFormClientVols extends BaseFormClient {
        cnt.add(BorderLayout.CENTER, 
                BoxLayout.encloseY(
                        ta,
-                       tnc,
                        BoxLayout.encloseX(likes, comments),
                        sb
                ));
@@ -201,6 +225,10 @@ public class NewsfeedFormClientVols extends BaseFormClient {
        sb.addActionListener(new ActionListener() {
            @Override
            public void actionPerformed(ActionEvent evt) {
+               ConnectionRequest con = new ConnectionRequest();
+        con.setUrl("http://localhost/apijsonpi/web/app_dev.php/api/reserver/"+v.getNumTicket()+"/"+authuser.user.getId_user());
+        NetworkManager.getInstance().addToQueue(con);
+        new NewsfeedFormClientVols(res).show();
            }
        });
    }
@@ -226,7 +254,6 @@ public class NewsfeedFormClientVols extends BaseFormClient {
             for (Map<String, Object> obj : list) {
                 i++;
                 Vol e = new Vol();//id, json, status);
-                
                 e.setClient_vol_fk((int) Float.parseFloat(obj.get("clientVolFk").toString()));
                 e.setNumTicket((int) Float.parseFloat(obj.get("numticket").toString()));
                 e.setPrix_vol((double) Float.parseFloat(obj.get("prixVol").toString()));    

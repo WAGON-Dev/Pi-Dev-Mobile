@@ -68,10 +68,10 @@ public class authuser {
                         user.setUsername(((String) data.get("username")));
                         user.setAdresse(((String) data.get("adresse")));
                         user.setCin(((String) data.get("cin")));
-                        Map<String, Object> data2 = (Map<String, Object>) (data.get("datenaissence"));
+                        /*Map<String, Object> data2 = (Map<String, Object>) (data.get("datenaissence"));
                         temp = (int) Float.parseFloat(data2.get("timestamp").toString());
                         Date myDate = new Date(temp * 1000L);
-                        user.setDateNaissence(myDate);
+                        //user.setDateNaissence(myDate);*/
                         List<String> content = new ArrayList<>();
                         content.addAll((Collection<? extends String>) (data.get("roles")));
                         user.setRoles(content.get(0));
@@ -86,7 +86,7 @@ public class authuser {
                 System.out.println(user);
                 if (passlog.equals("")) {
                     Dialog.show("error", "Please put your password ! ", "cancel", "ok");
-                } else if (!(user.getPassword().equals(passlog))) {
+                } else if (!(user.getPassword().equals(MD5.hash(passlog)))) {
                     System.out.println(user.getPassword());
                     System.out.println(passlog);
                     Dialog.show("error", "Wrong password please retry! ", "cancel", "ok");
@@ -109,7 +109,7 @@ public class authuser {
             }
         };
         System.out.println(userlog);
-        connectionRequest.setUrl("http://localhost:8081/apijsonpi/web/app_dev.php/api/finduser/" + userlog);
+        connectionRequest.setUrl("http://localhost/apijsonpi/web/app_dev.php/api/finduser/" + userlog);
         NetworkManager.getInstance().addToQueue(connectionRequest);
     }
 
@@ -164,7 +164,7 @@ public class authuser {
             @Override
             protected void postResponse() {
                 if (user.getRoles().equals("ROLE_CLIENT")) {
-                        new AfficheForClient(res,user).show();
+                        new NewsfeedFormClient(res).show();
                     /*Message m = new Message("Welcome in GoVoyage Application");
                         m.getAttachments().put("test", "text/plain");
                         //m.getAttachments().put(imageAttachmentUri, "image/png");
@@ -176,7 +176,7 @@ public class authuser {
                 }
             }
         };
-        connectionRequest.setUrl("http://localhost:8081/apijsonpi/web/app_dev.php/api/newuser?username=" + userlog + "&email=" + email + "&password=" + pass + "&role=" + rol + "&numtel=" + numtel + "&adresse=" + adresse);
+        connectionRequest.setUrl("http://localhost/apijsonpi/web/app_dev.php/api/newuser?username=" + userlog + "&email=" + email + "&password=" + MD5.hash(pass) + "&role=" + rol + "&numtel=" + numtel + "&adresse=" + adresse);
         NetworkManager.getInstance().addToQueue(connectionRequest);
 
     }

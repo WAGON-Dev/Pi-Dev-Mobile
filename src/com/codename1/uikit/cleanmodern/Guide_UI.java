@@ -46,6 +46,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import service.authuser;
 
 /**
  *
@@ -58,21 +59,29 @@ public class Guide_UI extends GuideBaseForm{
         Toolbar tb = new Toolbar(true);
         setToolbar(tb);
         getTitleArea().setUIID("Container");
-        setTitle("Liste des Voyages personalisés");
+        setTitle("Espace Guide");
         getContentPane().setScrollVisible(false);
         
         super.addSideMenu(res);
-        tb.addSearchCommand(e -> {});
-        
+        Image img = res.getImage("rech.png");
+        Form previous = Display.getInstance().getCurrent();
+        tb.setBackCommand("", e -> previous.showBack());
+        tb.addCommandToRightBar("", img, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                new Guide_searchnewsfeed(res).show();
+            }
+        });
+
         Tabs swipe = new Tabs();
 
         Label spacer2 = new Label();
         addTab(swipe, res.getImage("vp.jpg"), spacer2, "100 Likes  ", "66 Comments", "Dogs are cute: story at 11");
-                
+
         swipe.setUIID("Container");
         swipe.getContentPane().setUIID("Container");
         swipe.hideTabs();
-        
+
         ButtonGroup bg = new ButtonGroup();
         int size = Display.getInstance().convertToPixels(1);
         Image unselectedWalkthru = Image.createImage(size, size, 0);
@@ -90,28 +99,52 @@ public class Guide_UI extends GuideBaseForm{
         FlowLayout flow = new FlowLayout(CENTER);
         flow.setValign(BOTTOM);
         Container radioContainer = new Container(flow);
-        for(int iter = 0 ; iter < rbs.length ; iter++) {
+        for (int iter = 0; iter < rbs.length; iter++) {
             rbs[iter] = RadioButton.createToggle(unselectedWalkthru, bg);
             rbs[iter].setPressedIcon(selectedWalkthru);
             rbs[iter].setUIID("Label");
             radioContainer.add(rbs[iter]);
         }
-                
+
         rbs[0].setSelected(true);
         swipe.addSelectionListener((i, ii) -> {
-            if(!rbs[ii].isSelected()) {
+            if (!rbs[ii].isSelected()) {
                 rbs[ii].setSelected(true);
             }
         });
-        
-        Component.setSameSize(radioContainer, spacer2);
+
+
+
         add(LayeredLayout.encloseIn(swipe, radioContainer));
         
+        
+        ButtonGroup barGroup = new ButtonGroup();
+        RadioButton all = RadioButton.createToggle("Voyages personalisés", barGroup);
+        all.setUIID("SelectBar");
+        Label arrow = new Label(res.getImage("news-tab-down-arrow.png"), "Container");
+
+        add(LayeredLayout.encloseIn(
+                GridLayout.encloseIn(1, all),
+                FlowLayout.encloseBottom(arrow)
+        ));
+
+        all.setSelected(true);
+        arrow.setVisible(false);
+        addShowListener(e -> {
+            arrow.setVisible(true);
+            updateArrowPosition(all, arrow);
+        });
+        bindButtonSelection(all, arrow);
+
+        // special case for rotation
+        addOrientationListener(e -> {
+            updateArrowPosition(barGroup.getRadioButton(barGroup.getSelectedIndex()), arrow);
+        });
         ConnectionRequest con = new ConnectionRequest();
         con.setUrl("http://localhost/apijsonpi/web/app_dev.php/api/vpall");
         //con.setUrl("http://pidev.justsmart.tn/api/tasks/all"); //Pour la liste des étudiants 
         con.addResponseListener(new ActionListener<NetworkEvent>() {
-           
+
             List<Voyagepersonalise> Voyagepersonalises = new ArrayList<>();
 
             @Override
@@ -119,17 +152,19 @@ public class Guide_UI extends GuideBaseForm{
                 Voyagepersonalises = getList(new String(con.getResponseData()));
                 for (Iterator it = Voyagepersonalises.iterator(); it.hasNext();) {
                     Voyagepersonalise r = (Voyagepersonalise) it.next();
-                    addButton(res.getImage("vppic.jpg"),r,res);
+                    if (!(r.getGuide_fk() > 0)) {
+                        addButton(res.getImage("vppic.jpg"), r, res);
+                    }
                 }
 
-            } 
+            }
         });
         NetworkManager.getInstance().addToQueue(con);
     }
-    
+
     private void addTab(Tabs swipe, Image img, Label spacer, String likesStr, String commentsStr, String text) {
         int size = Math.min(Display.getInstance().getDisplayWidth(), Display.getInstance().getDisplayHeight());
-        if(img.getHeight() < size) {
+        if (img.getHeight() < size) {
             img = img.scaledHeight(size);
         }
         Label likes = new Label(likesStr);
@@ -141,56 +176,59 @@ public class Guide_UI extends GuideBaseForm{
 
         Label comments = new Label(commentsStr);
         FontImage.setMaterialIcon(comments, FontImage.MATERIAL_CHAT);
-        if(img.getHeight() > Display.getInstance().getDisplayHeight() / 2) {
+        if (img.getHeight() > Display.getInstance().getDisplayHeight() / 2) {
             img = img.scaledHeight(Display.getInstance().getDisplayHeight() / 2);
         }
         ScaleImageLabel image = new ScaleImageLabel(img);
         image.setUIID("Container");
         image.setBackgroundType(Style.BACKGROUND_IMAGE_SCALED_FILL);
         Label overlay = new Label(" ", "ImageOverlay");
-        
-        Container page1 = 
-            LayeredLayout.encloseIn(
-                image,
-                overlay,
-                BorderLayout.south(
-                    BoxLayout.encloseY(
+
+        Container page1
+                = LayeredLayout.encloseIn(
+                        image,
+                        overlay,
+                        BorderLayout.south(
+                                BoxLayout.encloseY()
                         )
-                )
-            );
+                );
 
         swipe.addTab("", page1);
     }
-    
-   private void addButton(Image img, Voyagepersonalise v,Resources res) {
-       int height = Display.getInstance().convertToPixels(11.5f);
-       int width = Display.getInstance().convertToPixels(14f);
-       Button image = new Button(img.fill(width, height));
-       image.setUIID("Label");
-       Container cnt = BorderLayout.west(image);
-       TextArea ta = new TextArea(v.getNom());
-       ta.setUIID("NewsTopLine");
-       ta.setEditable(false);
-       Button sb = new Button("Postuler");
-       sb.setTextPosition(RIGHT);
-       Label likes = new Label("de "+v.getVille_depart(), "NewsBottomLine");
-       likes.setTextPosition(RIGHT);
-       Label comments = new Label("à "+v.getVille_arrive(), "NewsBottomLine");
-       cnt.add(BorderLayout.CENTER, 
-               BoxLayout.encloseY(
-                       ta,
-                       BoxLayout.encloseX(likes, comments),
-                       sb
-               ));
-       add(cnt);
-       image.addActionListener(e -> ToastBar.showMessage("Nombre des participants: "+v.getNbr_participant(), FontImage.MATERIAL_INFO));
-       sb.addActionListener(new ActionListener() {
-           @Override
-           public void actionPerformed(ActionEvent evt) {
-           }
-       });
-   }
-    
+
+    private void addButton(Image img, Voyagepersonalise v, Resources res) {
+        int height = Display.getInstance().convertToPixels(11.5f);
+        int width = Display.getInstance().convertToPixels(14f);
+        Button image = new Button(img.fill(width, height));
+        image.setUIID("Label");
+        Container cnt = BorderLayout.west(image);
+        TextArea ta = new TextArea(v.getNom());
+        ta.setUIID("NewsTopLine");
+        ta.setEditable(false);
+        Button sb = new Button("Postuler");
+        sb.setTextPosition(RIGHT);
+        Label likes = new Label("de : " + v.getVille_depart(), "NewsBottomLine");
+        likes.setTextPosition(RIGHT);
+        Label comments = new Label("à : " + v.getVille_arrive(), "NewsBottomLine");
+        cnt.add(BorderLayout.CENTER,
+                BoxLayout.encloseY(
+                        ta,
+                        BoxLayout.encloseX(likes, comments),
+                        sb
+                ));
+        add(cnt);
+        image.addActionListener(e -> ToastBar.showMessage("Nombre des participants: " + v.getNbr_participant(), FontImage.MATERIAL_INFO));
+        sb.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                ConnectionRequest con = new ConnectionRequest();
+                con.setUrl("http://localhost/apijsonpi/web/app_dev.php/api/postuler/" + v.getId_vp() + "/" + authuser.user.getId_user());
+                NetworkManager.getInstance().addToQueue(con);
+                new Guide_UI(res).show();
+            }
+        });
+    }
+
     public ArrayList<Voyagepersonalise> getList(String json) {
         ArrayList<Voyagepersonalise> listEtudiants = new ArrayList<>();
         try {
@@ -205,12 +243,13 @@ public class Guide_UI extends GuideBaseForm{
             for (Map<String, Object> obj : list) {
                 i++;
                 Voyagepersonalise e = new Voyagepersonalise();//id, json, status);
-                
+
+                e.setGuide_fk((int) Float.parseFloat(obj.get("idGuideFk").toString()));
                 e.setId_vp((int) Float.parseFloat(obj.get("idVp").toString()));
                 e.setClient_vp_fk((int) Float.parseFloat(obj.get("clientVpFk").toString()));
-                e.setNbr_participant((int) Float.parseFloat(obj.get("nbrParticipant").toString()));    
-                e.setNom(obj.get("nom").toString());      
-                e.setVille_arrive(obj.get("villeArrive").toString());    
+                e.setNbr_participant((int) Float.parseFloat(obj.get("nbrParticipant").toString()));
+                e.setNom(obj.get("nom").toString());
+                e.setVille_arrive(obj.get("villeArrive").toString());
                 e.setVille_depart(obj.get("villeDepart").toString());
                 listEtudiants.add(e);
 
@@ -220,5 +259,19 @@ public class Guide_UI extends GuideBaseForm{
         }
         return listEtudiants;
 
+    }
+
+    private void updateArrowPosition(Button b, Label arrow) {
+        arrow.getUnselectedStyle().setMargin(LEFT, b.getX() + b.getWidth() / 2 - arrow.getWidth() / 2);
+        arrow.getParent().repaint();
+
+    }
+
+    private void bindButtonSelection(Button b, Label arrow) {
+        b.addActionListener(e -> {
+            if (b.isSelected()) {
+                updateArrowPosition(b, arrow);
+            }
+        });
     }
 }
