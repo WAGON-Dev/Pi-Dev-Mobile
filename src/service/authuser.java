@@ -29,6 +29,7 @@ import com.codename1.uikit.cleanmodern.AfficheForClient;
 import com.codename1.uikit.cleanmodern.Guide_UI;
 import com.codename1.uikit.cleanmodern.NewsfeedFormClient;
 import com.codename1.uikit.cleanmodern.SignUpForm;
+import service.MD5;
 
 /**
  *
@@ -38,7 +39,7 @@ public class authuser {
 
     public static Users user = new Users();
     int temp;
-
+    
     public void login(Resources res) {
         // TextField userlogin = (TextField) SignInForm.builder.findByName("Username", SignInForm.ctn);
         //TextField passlogin = (TextField) SignInForm.builder.findByName("Password", SignInForm.ctn);
@@ -84,7 +85,7 @@ public class authuser {
                 System.out.println(user);
                 if (passlog.equals("")) {
                     Dialog.show("error", "Please put your password ! ", "cancel", "ok");
-                } else if (!(user.getPassword().equals(passlog))) {
+                } else if (!(user.getPassword().equals(MD5.hash(passlog)))) {
                     System.out.println(user.getPassword());
                     System.out.println(passlog);
                     Dialog.show("error", "Wrong password please retry! ", "cancel", "ok");

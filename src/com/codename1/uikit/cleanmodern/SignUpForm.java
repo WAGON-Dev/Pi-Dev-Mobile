@@ -64,12 +64,12 @@ public class SignUpForm extends BaseForm {
         numtel = new TextField("", "Numéro de telephone", 20, TextField.ANY);
         adresee = new TextField("", "Adresse", 20, TextField.ANY);
         box = new ComboBox();
-        username.setSingleLineTextArea(false);
-        email.setSingleLineTextArea(false);
-        password.setSingleLineTextArea(false);
-        confirmPassword.setSingleLineTextArea(false);
-        numtel.setSingleLineTextArea(false);
-        adresee.setSingleLineTextArea(false);
+        username.setSingleLineTextArea(true);
+        email.setSingleLineTextArea(true);
+        password.setSingleLineTextArea(true);
+        confirmPassword.setSingleLineTextArea(true);
+        numtel.setSingleLineTextArea(true);
+        adresee.setSingleLineTextArea(true);
         Button next = new Button("Next");
         Button signIn = new Button("Sign In");
         signIn.addActionListener(e -> previous.showBack());
