@@ -42,8 +42,27 @@ int nb_chambre_reserve;
     public Users() {
     }
 
-
-    public Users(int id_user, String username, String username_canonical, String email, String email_canonical, int enabled, String salt, String password, Date last_login, String confirmation_tokenIndex, Date password_requested_at, String roles, String nom, int numTel, String adresse, String image, int etoile, int nb_chambre, String prenom, String cin, Date dateNaissence, int note, int nbr_note, int nbr_voiture, int nbr_voyage_organise, int nb_chambre_reserve) {
+        
+    public Users(String username, String email, String password, String roles, int numTel, String adresse, String image) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.roles = roles;
+        this.numTel = numTel;
+        this.adresse = adresse;
+        this.image = image;
+    }
+public Users(int id_user, String nom, String email, String mdp,  int numtel, String adresse, String role, String image) {
+        this.id_user = id_user;
+        this.email = email;
+        this.password = password;
+        this.roles = roles;
+        this.nom = nom;
+        this.numTel = numTel;
+        this.adresse = adresse;
+        this.image = image;
+    }
+public Users(int id_user, String username, String username_canonical, String email, String email_canonical, int enabled, String salt, String password, Date last_login, String confirmation_tokenIndex, Date password_requested_at, String roles, String nom, int numTel, String adresse, String image, int etoile, int nb_chambre, String prenom, String cin, Date dateNaissence, int note, int nbr_note, int nbr_voiture, int nbr_voyage_organise, int nb_chambre_reserve) {
         this.id_user = id_user;
         this.username = username;
         this.username_canonical = username_canonical;

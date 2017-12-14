@@ -21,6 +21,9 @@
     <image name="images (1).jpg"  />
     <image name="images (2).jpg"  />
     <image name="images.jpg"  />
+    <image name="index.jpg"  />
+    <image name="index2.jpg"  />
+    <image name="index3.jpg"  />
     <image name="Logo.png" type="multi"  />
     <image name="lufthansa.jpg"  />
     <image name="megane4_ig_w1200_h615.jpg"  />
@@ -37,6 +40,8 @@
     <image name="profile-background.jpg"  />
     <image name="profile-pic.jpg" type="multi"  />
     <image name="reno.jpg"  />
+    <image name="room.jpg"  />
+    <image name="roomgrey.jpg"  />
     <image name="signin-background.jpg"  />
     <image name="signup-background.jpg"  />
     <image name="smily.png" type="multi"  />

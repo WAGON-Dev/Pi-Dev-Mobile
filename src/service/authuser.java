@@ -27,6 +27,7 @@ import com.codename1.ui.util.Resources;
 import com.codename1.uikit.cleanmodern.AfficheForALV;
 import com.codename1.uikit.cleanmodern.AfficheForClient;
 import com.codename1.uikit.cleanmodern.Guide_UI;
+import com.codename1.uikit.cleanmodern.ListeChambre;
 import com.codename1.uikit.cleanmodern.NewsfeedFormClient;
 import com.codename1.uikit.cleanmodern.SignUpForm;
 import service.MD5;
@@ -85,20 +86,23 @@ public class authuser {
                 System.out.println(user);
                 if (passlog.equals("")) {
                     Dialog.show("error", "Please put your password ! ", "cancel", "ok");
-                } else if (!(user.getPassword().equals(MD5.hash(passlog)))) {
+                } else if (!(user.getPassword().equals(passlog))) {
                     System.out.println(user.getPassword());
                     System.out.println(passlog);
                     Dialog.show("error", "Wrong password please retry! ", "cancel", "ok");
                 } else {
                     if (user.getRoles().equals("ROLE_CLIENT")) {
-                        new AfficheForClient(res,user).show();
+                        //new AfficheForClient(res,user).show();
                     } else if (user.getRoles().equals("ROLE_GUIDE")){
                         new Guide_UI(res).show();
                     }else if (user.getRoles().equals("ROLE_AGENCE_VOITURE")) {
                         new AfficheForALV(res,user).show();
                         System.out.println("corect");
-                    }
-                    else{
+                    }else if (user.getRoles().equals("ROLE_HOTEL")) {
+                        new ListeChambre(res).show();
+                       //new AfficheForClient(res,user).show();
+                        System.out.println("corect");
+                    }else{
                         Dialog.show("error", "Votre Espace n'est pas encore pret ", "cancel", "ok");
                     }
                 }
