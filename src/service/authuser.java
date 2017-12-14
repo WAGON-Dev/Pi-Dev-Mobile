@@ -93,7 +93,8 @@ public class authuser {
                         new AfficheForClient(res,user).show();
                     } else if (user.getRoles().equals("ROLE_GUIDE")){
                         new Guide_UI(res).show();
-                    }else if (user.getRoles().equals("ROLE_AGENCE_VOITURE")) {
+                    }
+                    else if (user.getRoles().equals("ROLE_AGENCE_VOITURE")) {
                         new AfficheForALV(res,user).show();
                         System.out.println("corect");
                     }
@@ -159,14 +160,13 @@ public class authuser {
             @Override
             protected void postResponse() {
                 if (user.getRoles().equals("ROLE_CLIENT")) {
-                    new AfficheForClient(res,user).show();
+                        new AfficheForClient(res,user).show();
                     /*Message m = new Message("Welcome in GoVoyage Application");
                         m.getAttachments().put("test", "text/plain");
                         //m.getAttachments().put(imageAttachmentUri, "image/png");
                         Display.getInstance().sendMessage(new String[]{user.getEmail()}, "Subject of message", m);*/
                     System.out.println("corect");
-                } 
-                else {
+                } else {
                     Dialog.show("error", "Votre Espace n'est pas encore pret ", "cancel", "ok");
                 }
             }
