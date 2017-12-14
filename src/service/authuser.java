@@ -68,10 +68,10 @@ public class authuser {
                         user.setUsername(((String) data.get("username")));
                         user.setAdresse(((String) data.get("adresse")));
                         user.setCin(((String) data.get("cin")));
-                        Map<String, Object> data2 = (Map<String, Object>) (data.get("datenaissence"));
+                        /*Map<String, Object> data2 = (Map<String, Object>) (data.get("datenaissence"));
                         temp = (int) Float.parseFloat(data2.get("timestamp").toString());
                         Date myDate = new Date(temp * 1000L);
-                        user.setDateNaissence(myDate);
+                        //user.setDateNaissence(myDate);*/
                         List<String> content = new ArrayList<>();
                         content.addAll((Collection<? extends String>) (data.get("roles")));
                         user.setRoles(content.get(0));
