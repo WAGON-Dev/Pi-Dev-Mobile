@@ -93,8 +93,7 @@ public class authuser {
                         new AfficheForClient(res,user).show();
                     } else if (user.getRoles().equals("ROLE_GUIDE")){
                         new Guide_UI(res).show();
-                    }
-                    else if (user.getRoles().equals("ROLE_AGENCE_VOITURE")) {
+                    }else if (user.getRoles().equals("ROLE_AGENCE_VOITURE")) {
                         new AfficheForALV(res,user).show();
                         System.out.println("corect");
                     }
@@ -166,7 +165,8 @@ public class authuser {
                         //m.getAttachments().put(imageAttachmentUri, "image/png");
                         Display.getInstance().sendMessage(new String[]{user.getEmail()}, "Subject of message", m);*/
                     System.out.println("corect");
-                } else {
+                } 
+                else {
                     Dialog.show("error", "Votre Espace n'est pas encore pret ", "cancel", "ok");
                 }
             }
