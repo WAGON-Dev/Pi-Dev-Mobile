@@ -68,7 +68,7 @@ public class AjoutChambre extends BaseForm {
         Toolbar tb = new Toolbar(true);
         setToolbar(tb);
         getTitleArea().setUIID("Container");
-        setTitle("Newsfeed");
+        setTitle("ajouter une chambre");
         getContentPane().setScrollVisible(false);
         Form previous = Display.getInstance().getCurrent();
         tb.setBackCommand("", e -> previous.showBack());

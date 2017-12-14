@@ -86,7 +86,7 @@ public class authuser {
                 System.out.println(user);
                 if (passlog.equals("")) {
                     Dialog.show("error", "Please put your password ! ", "cancel", "ok");
-                } else if (!(user.getPassword().equals(MD5.hash(passlog)))) {
+                } else if (!(user.getPassword().equals(passlog))) {
                     System.out.println(user.getPassword());
                     System.out.println(passlog);
                     Dialog.show("error", "Wrong password please retry! ", "cancel", "ok");
@@ -109,7 +109,7 @@ public class authuser {
             }
         };
         System.out.println(userlog);
-        connectionRequest.setUrl("http://localhost/apijsonpi/web/app_dev.php/api/finduser/" + userlog);
+        connectionRequest.setUrl("http://localhost:8081/apijsonpi/web/app_dev.php/api/finduser/" + userlog);
         NetworkManager.getInstance().addToQueue(connectionRequest);
     }
 
@@ -176,7 +176,7 @@ public class authuser {
                 }
             }
         };
-        connectionRequest.setUrl("http://localhost/apijsonpi/web/app_dev.php/api/newuser?username=" + userlog + "&email=" + email + "&password=" + MD5.hash(pass) + "&role=" + rol + "&numtel=" + numtel + "&adresse=" + adresse);
+        connectionRequest.setUrl("http://localhost:8081/apijsonpi/web/app_dev.php/api/newuser?username=" + userlog + "&email=" + email + "&password=" + MD5.hash(pass) + "&role=" + rol + "&numtel=" + numtel + "&adresse=" + adresse);
         NetworkManager.getInstance().addToQueue(connectionRequest);
 
     }
