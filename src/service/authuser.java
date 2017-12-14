@@ -24,6 +24,8 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Map;
 import com.codename1.ui.util.Resources;
+import com.codename1.uikit.cleanmodern.AfficheForALV;
+import com.codename1.uikit.cleanmodern.AfficheForClient;
 import com.codename1.uikit.cleanmodern.Guide_UI;
 import com.codename1.uikit.cleanmodern.NewsfeedFormClient;
 import com.codename1.uikit.cleanmodern.SignUpForm;
@@ -88,17 +90,21 @@ public class authuser {
                     Dialog.show("error", "Wrong password please retry! ", "cancel", "ok");
                 } else {
                     if (user.getRoles().equals("ROLE_CLIENT")) {
-                        new NewsfeedFormClient(res).show();
+                        new AfficheForClient(res,user).show();
                     } else if (user.getRoles().equals("ROLE_GUIDE")){
                         new Guide_UI(res).show();
-                    }else{
+                    }else if (user.getRoles().equals("ROLE_AGENCE_VOITURE")) {
+                        new AfficheForALV(res,user).show();
+                        System.out.println("corect");
+                    }
+                    else{
                         Dialog.show("error", "Votre Espace n'est pas encore pret ", "cancel", "ok");
                     }
                 }
             }
         };
         System.out.println(userlog);
-        connectionRequest.setUrl("http://localhost/apijsonpi/web/app_dev.php/api/finduser/" + userlog);
+        connectionRequest.setUrl("http://localhost:8081/apijsonpi/web/app_dev.php/api/finduser/" + userlog);
         NetworkManager.getInstance().addToQueue(connectionRequest);
     }
 
@@ -129,8 +135,8 @@ public class authuser {
             rol = "ROLE_HOTEL";
         } else if (role == 3) {
             rol = "ROLE_PASSAGER";
-        } else if (role == 4) {
-            rol = "ROLE_PASSAGER";
+        } else if (role==4){
+            rol = "ROLE_AGENCE_VOITURE";
         }
         if (!pass.equals(conpass)) {
             Dialog.show("error", "please confirm your password ", "cancel", "ok");
@@ -153,18 +159,19 @@ public class authuser {
             @Override
             protected void postResponse() {
                 if (user.getRoles().equals("ROLE_CLIENT")) {
-                    new NewsfeedFormClient(res).show();
+                    new AfficheForClient(res,user).show();
                     /*Message m = new Message("Welcome in GoVoyage Application");
                         m.getAttachments().put("test", "text/plain");
                         //m.getAttachments().put(imageAttachmentUri, "image/png");
                         Display.getInstance().sendMessage(new String[]{user.getEmail()}, "Subject of message", m);*/
                     System.out.println("corect");
-                } else {
+                } 
+                else {
                     Dialog.show("error", "Votre Espace n'est pas encore pret ", "cancel", "ok");
                 }
             }
         };
-        connectionRequest.setUrl("http://localhost/apijsonpi/web/app_dev.php/api/newuser?username=" + userlog + "&email=" + email + "&password=" + pass + "&role=" + rol + "&numtel=" + numtel + "&adresse=" + adresse);
+        connectionRequest.setUrl("http://localhost:8081/apijsonpi/web/app_dev.php/api/newuser?username=" + userlog + "&email=" + email + "&password=" + pass + "&role=" + rol + "&numtel=" + numtel + "&adresse=" + adresse);
         NetworkManager.getInstance().addToQueue(connectionRequest);
 
     }

@@ -1,14 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <resource majorVersion="1" minorVersion="7" useXmlUI="false">
+    <image name="0-71-renault-clio.jpg"  />
+    <image name="2014-Jeep-Cherokee2.jpg"  />
+    <image name="2016_mercedes_benz_sl-wide.jpg"  />
+    <image name="2016_volkswagen_tiguan_suv-HD.jpg"  />
+    <image name="2017-nissan-titan-black-large.jpg"  />
+    <image name="2758581-airport-wallpapers.jpg"  />
+    <image name="63560036-airport-wallpapers.jpg"  />
     <image name="activation-background.jpg"  />
+    <image name="air.jpg"  />
     <image name="AirFrance.jpg"  />
+    <image name="BMW-1series-3door-at-a-glance-ts-01.jpg.resource.1493136645623.jpg"  />
+    <image name="BMW-5series-touring-ataglance-ts-01.jpg.resource.1481011748862.jpg"  />
     <image name="confirmation-background.jpg"  />
+    <image name="delete_white_192x192.png"  />
     <image name="dog.jpg"  />
     <image name="emirates.jpg"  />
     <image name="facebook-logo.png" type="multi"  />
+    <image name="images (1).jpg"  />
+    <image name="images (2).jpg"  />
+    <image name="images.jpg"  />
     <image name="Logo.png" type="multi"  />
     <image name="lufthansa.jpg"  />
+    <image name="megane4_ig_w1200_h615.jpg"  />
     <image name="news-item-1.jpg"  />
     <image name="news-item-2.jpg"  />
     <image name="news-item-3.jpg"  />
@@ -18,8 +33,10 @@
     <image name="news-tab-down.png" type="multi"  />
     <image name="on-off-off.png" type="multi"  />
     <image name="on-off-on.png" type="multi"  />
+    <image name="peugeot-5008-front-tracking-xlarge-xlarge_trans_NvBQzQNjv4BqrWYeUU_H0zBKyvljOo6zlkYMapKPjdhyLnv9ax6_too.jpg"  />
     <image name="profile-background.jpg"  />
     <image name="profile-pic.jpg" type="multi"  />
+    <image name="reno.jpg"  />
     <image name="signin-background.jpg"  />
     <image name="signup-background.jpg"  />
     <image name="smily.png" type="multi"  />
@@ -334,6 +351,8 @@
     <image name="timeline-background.jpg"  />
     <image name="TunisAir.jpg"  />
     <image name="twitter-logo.png" type="multi"  />
+    <image name="t&#xe9;l&#xe9;chargement (1).jpg"  />
+    <image name="t&#xe9;l&#xe9;chargement.jpg"  />
     <image name="vol.jpg"  />
     <image name="vp.jpg"  />
     <image name="vppic.jpg"  />
