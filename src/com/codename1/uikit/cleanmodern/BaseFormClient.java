@@ -84,7 +84,9 @@ public class BaseFormClient extends Form {
         
         tb.addMaterialCommandToSideMenu("Newsfeed", FontImage.MATERIAL_UPDATE, e -> new NewsfeedFormClient(res).show());
         tb.addMaterialCommandToSideMenu("Liste des Vols", FontImage.MATERIAL_UPDATE, e -> new NewsfeedFormClientVols(res).show());
+        tb.addMaterialCommandToSideMenu("hotels", FontImage.MATERIAL_UPDATE, e -> new NewsfeedFormClientHotel(res).show());
         tb.addMaterialCommandToSideMenu("Profile", FontImage.MATERIAL_SETTINGS, e -> new ProfilFormClient(res).show());
+        tb.addMaterialCommandToSideMenu("Evaluer", FontImage.MATERIAL_SETTINGS, e -> new EvaluerApp(res).show());
         tb.addMaterialCommandToSideMenu("Logout", FontImage.MATERIAL_EXIT_TO_APP, e -> new SignInForm(res).show());
     }
 }
