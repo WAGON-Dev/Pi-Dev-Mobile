@@ -30,6 +30,7 @@ import com.codename1.uikit.cleanmodern.Guide_UI;
 import com.codename1.uikit.cleanmodern.ListeChambre;
 import com.codename1.uikit.cleanmodern.NewsfeedFormClient;
 import com.codename1.uikit.cleanmodern.SignUpForm;
+import org.mindrot.BCrypt;
 import service.MD5;
 
 /**
@@ -86,11 +87,14 @@ public class authuser {
                 System.out.println(user);
                 if (passlog.equals("")) {
                     Dialog.show("error", "Please put your password ! ", "cancel", "ok");
-                } else if (!(user.getPassword().equals(passlog))) {
+                } 
+                if (!(BCrypt.checkpw(passlog, user.getPassword())))
+                         {
                     System.out.println(user.getPassword());
                     System.out.println(passlog);
                     Dialog.show("error", "Wrong password please retry! ", "cancel", "ok");
-                } else {
+                } 
+                else {
                     if (user.getRoles().equals("ROLE_CLIENT")) {
                         new NewsfeedFormClient(res).show();
                     } else if (user.getRoles().equals("ROLE_GUIDE")){
@@ -101,7 +105,7 @@ public class authuser {
                     }else if (user.getRoles().equals("ROLE_HOTEL")) {
                         new ListeChambre(res).show();
                        //new AfficheForClient(res,user).show();
-                        System.out.println("corect");
+                        System.out.println("correct");
                     }else{
                         Dialog.show("error", "Votre Espace n'est pas encore pret ", "cancel", "ok");
                     }

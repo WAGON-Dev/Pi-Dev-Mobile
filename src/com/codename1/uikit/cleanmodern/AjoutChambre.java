@@ -131,12 +131,12 @@ public class AjoutChambre extends BaseForm {
         Label prixl = new Label("Prix");
         Label typel = new Label("Type");
         TextField prix = new TextField("prix", TextField.NUMERIC);
-
+TextField champ = new TextField("champ", TextField.NUMERIC);
         prix.getStyle().setFgColor(0x000000);
 
         Button ajout = new Button("Ajouter");
         Container ajouter = new Container(BoxLayout.y());
-        ajouter.add(typel).add(type).add(prixl).add(prix).add(ajout);
+        ajouter.add(typel).add(type).add(prixl).add(prix).add(ajout).add(champ);
         /*type,
                 new FloatingHint(prix),
                 createLineSeparator(),

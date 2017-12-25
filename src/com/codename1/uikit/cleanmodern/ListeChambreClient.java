@@ -42,6 +42,8 @@ import com.codename1.ui.layouts.LayeredLayout;
 import com.codename1.ui.plaf.Style;
 import com.codename1.ui.spinner.Picker;
 import com.codename1.ui.util.Resources;
+import com.twilio.Twilio;
+import com.twilio.type.PhoneNumber;
 import entity.Chambre;
 import java.io.IOException;
 import java.text.ParseException;
@@ -54,10 +56,11 @@ import service.authuser;
  *
  * @author Ahmed
  */
-public class ListeChambreClient extends BaseForm {
+public class ListeChambreClient extends BaseFormClient {
 
     Container AfficheChambre;
-
+         public static final String ACCOUNT_SID = " AC08254994e8eaac834274fa8d99915b1b";
+         public static final String AUTH_TOKEN = "c914eef23fc5e2f5bd70c87efc60bee0";
     public ListeChambreClient(Resources res, int id) {
         super("Newsfeed", BoxLayout.y());
 
@@ -200,6 +203,16 @@ public class ListeChambreClient extends BaseForm {
                                         if (!s.equals("Error")) {
 
                                             Dialog.show("Confirmation reservation", "cliquez ok pour confirmer", "Ok", null);
+                                            
+                                            
+                                            Twilio.init("AC08254994e8eaac834274fa8d99915b1b", "c914eef23fc5e2f5bd70c87efc60bee0");
+                                com.twilio.rest.api.v2010.account.Message message = com.twilio.rest.api.v2010.account.Message.creator(new PhoneNumber("+216"+String.valueOf(authuser.user.getNumTel())),
+                                new PhoneNumber("+16288886361"),"Votre reservation a été ajoutée").create();
+                    
+                                           
+                                            
+                                            
+                                            
                                              new NewsfeedFormClientHotel(res).show();
 
                                         } else {
