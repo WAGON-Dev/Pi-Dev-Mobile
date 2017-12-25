@@ -121,6 +121,10 @@ public class authuser {
         String rol = "";
         String userlog = SignUpForm.username.getText();
         String pass = SignUpForm.password.getText();
+        
+        String passhs = BCrypt.hashpw(SignUpForm.password.getText(), BCrypt.gensalt()) ;
+        String conpasshs = BCrypt.hashpw(SignUpForm.confirmPassword.getText(), BCrypt.gensalt()) ;
+        
         String email = SignUpForm.email.getText();
         String conpass = SignUpForm.confirmPassword.getText();
         int numtel = Integer.parseInt(SignUpForm.numtel.getText());
@@ -180,7 +184,7 @@ public class authuser {
                 }
             }
         };
-        connectionRequest.setUrl("http://localhost:8081/apijsonpi/web/app_dev.php/api/newuser?username=" + userlog + "&email=" + email + "&password=" + MD5.hash(pass) + "&role=" + rol + "&numtel=" + numtel + "&adresse=" + adresse);
+        connectionRequest.setUrl("http://localhost:8081/apijsonpi/web/app_dev.php/api/newuser?username=" + userlog + "&email=" + email + "&password=" + passhs + "&role=" + rol + "&numtel=" + numtel + "&adresse=" + adresse);
         NetworkManager.getInstance().addToQueue(connectionRequest);
 
     }
