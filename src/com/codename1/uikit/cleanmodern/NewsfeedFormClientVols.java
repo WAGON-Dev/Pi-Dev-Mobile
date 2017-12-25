@@ -60,9 +60,14 @@ public class NewsfeedFormClientVols extends BaseFormClient {
         getTitleArea().setUIID("Container");
         setTitle("Liste des Vols");
         getContentPane().setScrollVisible(false);
-        
+        Image img = null;
         super.addSideMenu(res);
-        
+        tb.addCommandToRightBar("Book", img, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                new Vol_booking(res).show();
+            }
+        });
         Tabs swipe = new Tabs();
 
         Label spacer1 = new Label();
