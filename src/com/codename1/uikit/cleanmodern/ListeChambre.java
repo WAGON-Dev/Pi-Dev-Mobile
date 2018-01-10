@@ -182,7 +182,7 @@ public class ListeChambre extends BaseFormhotel {
                                 cnt.setLeadComponent(btn);*/
                                 Dialog d = new Dialog();
 
-                                if (Dialog.show("Confirmation", "Chambre supprimer avec succes", "Ok", null)) {
+                                if ( Dialog.show("Confirmation suppression", "cliquez ok pour confirmer suppression", "Ok", "non")) {
                                     ConnectionRequest req = new ConnectionRequest();
 
                                     req.setUrl("http://localhost:8081/Mobile1/web/app_dev.php/api/" + t.getIdChambre() + "/delete" + "");

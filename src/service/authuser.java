@@ -30,6 +30,7 @@ import com.codename1.uikit.cleanmodern.Guide_UI;
 import com.codename1.uikit.cleanmodern.ListeChambre;
 import com.codename1.uikit.cleanmodern.NewsfeedFormClient;
 import com.codename1.uikit.cleanmodern.SignUpForm;
+import org.mindrot.BCrypt;
 import service.MD5;
 
 /**
@@ -86,11 +87,14 @@ public class authuser {
                 System.out.println(user);
                 if (passlog.equals("")) {
                     Dialog.show("error", "Please put your password ! ", "cancel", "ok");
-                } else if (!(user.getPassword().equals(MD5.hash(passlog)))) {
+                } 
+                if (!(BCrypt.checkpw(passlog, user.getPassword())))
+                         {
                     System.out.println(user.getPassword());
                     System.out.println(passlog);
                     Dialog.show("error", "Wrong password please retry! ", "cancel", "ok");
-                } else {
+                } 
+                else {
                     if (user.getRoles().equals("ROLE_CLIENT")) {
                         new NewsfeedFormClient(res).show();
                     } else if (user.getRoles().equals("ROLE_GUIDE")){
@@ -101,7 +105,7 @@ public class authuser {
                     }else if (user.getRoles().equals("ROLE_HOTEL")) {
                         new ListeChambre(res).show();
                        //new AfficheForClient(res,user).show();
-                        System.out.println("corect");
+                        System.out.println("correct");
                     }else{
                         Dialog.show("error", "Votre Espace n'est pas encore pret ", "cancel", "ok");
                     }
@@ -110,7 +114,7 @@ public class authuser {
         };
         System.out.println(userlog);
 //        connectionRequest.setUrl("http://localhost:8081/apijsonpi/web/app_dev.php/api/finduser/" + userlog);
-        connectionRequest.setUrl("http://localhost/apijsonpi/web/app_dev.php/api/finduser/" + userlog);
+        connectionRequest.setUrl("http://localhost:8081/apijsonpi/web/app_dev.php/api/finduser/" + userlog);
         NetworkManager.getInstance().addToQueue(connectionRequest);
     }
 
@@ -118,6 +122,10 @@ public class authuser {
         String rol = "";
         String userlog = SignUpForm.username.getText();
         String pass = SignUpForm.password.getText();
+        
+        String passhs = BCrypt.hashpw(SignUpForm.password.getText(), BCrypt.gensalt()) ;
+        String conpasshs = BCrypt.hashpw(SignUpForm.confirmPassword.getText(), BCrypt.gensalt()) ;
+        
         String email = SignUpForm.email.getText();
         String conpass = SignUpForm.confirmPassword.getText();
         int numtel = Integer.parseInt(SignUpForm.numtel.getText());
@@ -177,8 +185,12 @@ public class authuser {
                 }
             }
         };
+
+        connectionRequest.setUrl("http://localhost:8081/apijsonpi/web/app_dev.php/api/newuser?username=" + userlog + "&email=" + email + "&password=" + passhs + "&role=" + rol + "&numtel=" + numtel + "&adresse=" + adresse);
+
 //        connectionRequest.setUrl("http://localhost:8081/apijsonpi/web/app_dev.php/api/newuser?username=" + userlog + "&email=" + email + "&password=" + MD5.hash(pass) + "&role=" + rol + "&numtel=" + numtel + "&adresse=" + adresse);
-        connectionRequest.setUrl("http://localhost/apijsonpi/web/app_dev.php/api/newuser?username=" + userlog + "&email=" + email + "&password=" + MD5.hash(pass) + "&role=" + rol + "&numtel=" + numtel + "&adresse=" + adresse);
+        //connectionRequest.setUrl("http://localhost/apijsonpi/web/app_dev.php/api/newuser?username=" + userlog + "&email=" + email + "&password=" + MD5.hash(pass) + "&role=" + rol + "&numtel=" + numtel + "&adresse=" + adresse);
+
         NetworkManager.getInstance().addToQueue(connectionRequest);
 
     }

@@ -88,5 +88,6 @@ public class BaseFormClient extends Form {
         tb.addMaterialCommandToSideMenu("Profile", FontImage.MATERIAL_SETTINGS, e -> new ProfilFormClient(res).show());
         tb.addMaterialCommandToSideMenu("Evaluer", FontImage.MATERIAL_SETTINGS, e -> new EvaluerApp(res).show());
         tb.addMaterialCommandToSideMenu("Logout", FontImage.MATERIAL_EXIT_TO_APP, e -> new SignInForm(res).show());
+        tb.addMaterialCommandToSideMenu("stat", FontImage.MATERIAL_EXIT_TO_APP, e -> new MyApplication(res).show());
     }
 }
