@@ -114,7 +114,7 @@ public class authuser {
         };
         System.out.println(userlog);
 //        connectionRequest.setUrl("http://localhost:8081/apijsonpi/web/app_dev.php/api/finduser/" + userlog);
-        connectionRequest.setUrl("http://localhost:8081/apijsonpi/web/app_dev.php/api/finduser/" + userlog);
+        connectionRequest.setUrl("http://localhost/apijsonpi/web/app_dev.php/api/finduser/" + userlog);
         NetworkManager.getInstance().addToQueue(connectionRequest);
     }
 
@@ -186,7 +186,7 @@ public class authuser {
             }
         };
 
-        connectionRequest.setUrl("http://localhost:8081/apijsonpi/web/app_dev.php/api/newuser?username=" + userlog + "&email=" + email + "&password=" + passhs + "&role=" + rol + "&numtel=" + numtel + "&adresse=" + adresse);
+        connectionRequest.setUrl("http://localhost/apijsonpi/web/app_dev.php/api/newuser?username=" + userlog + "&email=" + email + "&password=" + passhs + "&role=" + rol + "&numtel=" + numtel + "&adresse=" + adresse);
 
 //        connectionRequest.setUrl("http://localhost:8081/apijsonpi/web/app_dev.php/api/newuser?username=" + userlog + "&email=" + email + "&password=" + MD5.hash(pass) + "&role=" + rol + "&numtel=" + numtel + "&adresse=" + adresse);
         //connectionRequest.setUrl("http://localhost/apijsonpi/web/app_dev.php/api/newuser?username=" + userlog + "&email=" + email + "&password=" + MD5.hash(pass) + "&role=" + rol + "&numtel=" + numtel + "&adresse=" + adresse);
