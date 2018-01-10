@@ -20,6 +20,7 @@ import static com.codename1.ui.Component.CENTER;
 import static com.codename1.ui.Component.LEFT;
 import static com.codename1.ui.Component.RIGHT;
 import com.codename1.ui.Container;
+import com.codename1.ui.Dialog;
 import com.codename1.ui.Display;
 import com.codename1.ui.FontImage;
 import com.codename1.ui.Form;
@@ -234,6 +235,7 @@ public class NewsfeedFormClientVols extends BaseFormClient {
         con.setUrl("http://localhost/apijsonpi/web/app_dev.php/api/reserver/"+v.getNumTicket()+"/"+authuser.user.getId_user());
         NetworkManager.getInstance().addToQueue(con);
         new NewsfeedFormClientVols(res).show();
+        Dialog.show("Reservation", "Vous avez reserver un vol du "+v.getNom_Compagnie(),"cancel", "ok");
            }
        });
    }
